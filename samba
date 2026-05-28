@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samba Sima — The Black Mamba</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #181818;
+    --gold: #e8c547;
+    --gold2: #f5d76e;
+    --red: #cc2b2b;
+    --white: #f5f5f0;
+    --muted: #888;
+    --border: rgba(232,197,71,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.1em; color: var(--black);
+    background: var(--gold); padding: 0.35rem 1rem; text-transform: uppercase;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: flex-end;
+    position: relative; overflow: hidden; padding-bottom: 6rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 65% 50%, rgba(232,197,71,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 80% at 80% 50%, rgba(204,43,43,0.07) 0%, transparent 60%),
+      #0a0a0a;
+  }
+  .hero-grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(232,197,71,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,197,71,0.04) 1px, transparent 1px);
+    background-size: 60px 60px; opacity: 0.8;
+  }
+  .hero-accent-line {
+    position: absolute; top: 0; bottom: 0; left: 55%; width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+  .hero-number {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(200px, 22vw, 320px);
+    color: rgba(232,197,71,0.04);
+    letter-spacing: -0.02em; line-height: 1; user-select: none;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 4rem; max-width: 720px;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow-line { width: 3rem; height: 2px; background: var(--gold); }
+  .hero-eyebrow span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 10rem);
+    line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 0.5rem;
+  }
+  .hero-title .name-samba { display: block; color: var(--white); }
+  .hero-title .name-sima {
+    display: block;
+    -webkit-text-stroke: 2px var(--gold); color: transparent;
+  }
+  .hero-alias {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 2rem;
+  }
+  .hero-stats-row {
+    display: flex; gap: 0; margin-bottom: 2.5rem;
+    border: 1px solid var(--border); width: fit-content;
+  }
+  .hero-stat {
+    padding: 1rem 2rem;
+    border-right: 1px solid var(--border); text-align: center;
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; color: var(--gold); display: block; line-height: 1;
+  }
+  .hero-stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--black); background: var(--gold);
+    padding: 1rem 2.5rem; text-decoration: none;
+    transition: background 0.25s, transform 0.15s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .hero-cta:hover { background: var(--gold2); transform: translateY(-2px); }
+  .hero-scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); z-index: 2; animation: bounce 2s infinite;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  section { padding: 6rem 4rem; }
+  .section-label {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;
+  }
+  .section-label-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem; color: var(--gold); opacity: 0.6;
+  }
+  .section-label-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted);
+  }
+  .section-label-line { flex: 1; height: 1px; background: var(--border); }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.05em; margin-bottom: 1rem;
+  }
+
+  #identite { background: var(--dark); }
+  .identity-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+  }
+  .portrait-frame {
+    width: 100%; aspect-ratio: 3/4;
+    background: var(--card); border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .portrait-placeholder {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10rem; color: rgba(232,197,71,0.15); line-height: 1; text-align: center;
+  }
+  .portrait-overlay-corner {
+    position: absolute; top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold); opacity: 0.4;
+  }
+  .portrait-badge {
+    position: absolute; bottom: -1px; left: -1px;
+    background: var(--gold); color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 0.1em; padding: 0.5rem 2rem;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  }
+  .identity-big-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    line-height: 1.3; color: var(--white); margin-bottom: 2rem;
+  }
+  .identity-big-text em { font-style: normal; color: var(--gold); }
+  .info-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--border); margin-bottom: 2rem;
+  }
+  .info-cell {
+    padding: 1rem 1.25rem;
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .info-cell:nth-child(2n) { border-right: none; }
+  .info-cell:nth-last-child(-n+2) { border-bottom: none; }
+  .info-cell-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.3rem;
+  }
+  .info-cell-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 600; color: var(--white);
+  }
+
+  #palmares { background: var(--black); }
+  .achievements-list { display: flex; flex-direction: column; gap: 0; }
+  .achievement {
+    display: grid; grid-template-columns: 60px 1fr auto;
+    align-items: center; gap: 2rem;
+    padding: 1.75rem 0; border-bottom: 1px solid var(--border);
+    transition: background 0.2s; cursor: default;
+  }
+  .achievement:first-child { border-top: 1px solid var(--border); }
+  .achievement:hover { background: rgba(232,197,71,0.03); }
+  .achievement-icon {
+    width: 48px; height: 48px;
+    background: rgba(232,197,71,0.08); border: 1px solid rgba(232,197,71,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+  }
+  .achievement-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 600; color: var(--white);
+  }
+  .achievement-detail {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem;
+  }
+  .achievement-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; color: var(--gold); opacity: 0.5; white-space: nowrap;
+  }
+
+  #combats { background: var(--dark); }
+  .fights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+  }
+  .fight-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 1.75rem; position: relative;
+    transition: border-color 0.25s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
+  }
+  .fight-card:hover { border-color: rgba(232,197,71,0.6); transform: translateY(-3px); }
+  .fight-card-top {
+    display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;
+  }
+  .fight-event {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+  }
+  .fight-result-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 0.1em; padding: 0.2rem 0.75rem;
+    background: rgba(232,197,71,0.12); color: var(--gold); border: 1px solid rgba(232,197,71,0.3);
+  }
+  .fight-vs {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; color: var(--white); margin-bottom: 0.5rem; line-height: 1.1;
+  }
+  .fight-vs span { color: var(--muted); font-size: 1rem; margin: 0 0.4rem; }
+  .fight-method {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600; color: var(--red);
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  .fight-meta { font-size: 0.8rem; color: var(--muted); font-family: 'Barlow', sans-serif; }
+  .fight-number {
+    position: absolute; bottom: 1rem; right: 1.25rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; color: rgba(255,255,255,0.03); line-height: 1; user-select: none;
+  }
+
+  .quote-section {
+    background: var(--gold); padding: 5rem 4rem; text-align: center; position: relative; overflow: hidden;
+  }
+  .quote-bg-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18rem; color: rgba(0,0,0,0.07); line-height: 1; user-select: none; letter-spacing: -0.05em;
+  }
+  .quote-text {
+    position: relative; z-index: 1;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem); color: var(--black);
+    letter-spacing: 0.05em; line-height: 1.2; max-width: 800px; margin: 0 auto 1.5rem;
+  }
+  .quote-source {
+    position: relative; z-index: 1;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,0,0,0.5);
+  }
+
+  #style { background: var(--black); }
+  .style-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem;
+  }
+  .style-card {
+    background: var(--black); padding: 2.5rem 2rem;
+    text-align: center; transition: background 0.2s;
+  }
+  .style-card:hover { background: var(--card); }
+  .style-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+  .style-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .style-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  .record-visual { display: flex; align-items: center; gap: 0.4rem; margin-top: 2rem; flex-wrap: wrap; }
+  .record-dot {
+    width: 16px; height: 16px; background: var(--gold);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+
+  footer {
+    background: var(--dark); border-top: 1px solid var(--border);
+    padding: 3rem 4rem; display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--gold); letter-spacing: 0.1em; }
+  .footer-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-align: center;
+  }
+  .footer-record { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--gold); letter-spacing: 0.1em; text-align: right; }
+  .footer-record small {
+    display: block; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+  }
+
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero-content { padding: 0 1.5rem; }
+    .identity-grid { grid-template-columns: 1fr; }
+    .style-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .footer-record { text-align: center; }
+    .achievement { grid-template-columns: 48px 1fr; }
+    .achievement-year { display: none; }
+    .quote-section { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Samba Sima</div>
+  <ul class="nav-links">
+    <li><a href="index.html#identite">Profil</a></li>
+    <li><a href="index.html#palmares">Palmarès</a></li>
+    <li><a href="index.html#combats">Combats</a></li>
+    <li><a href="index.html#style">Style</a></li>
+  </ul>
+  <div class="nav-badge">3–0 Invaincu</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-accent-line"></div>
+  <div class="hero-number">30</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span>Hexagone MMA · Poids Mouche · France</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="name-samba">Samba</span>
+      <span class="name-sima">Sima</span>
+    </h1>
+    <div class="hero-alias">" The Black Mamba "</div>
+    <div class="hero-stats-row">
+      <div class="hero-stat">
+        <span class="hero-stat-num">3</span>
+        <span class="hero-stat-label">Victoires</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">0</span>
+        <span class="hero-stat-label">Défaites</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">3</span>
+        <span class="hero-stat-label">KO/TKO</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">22</span>
+        <span class="hero-stat-label">Ans</span>
+      </div>
+    </div>
+    <a href="index.html#combats" class="hero-cta">Voir les combats →</a>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<section id="identite">
+  <div class="section-label">
+    <span class="section-label-num">01</span>
+    <span class="section-label-text">Identité</span>
+    <div class="section-label-line"></div>
+  </div>
+  <div class="identity-grid">
+    <div class="identity-portrait fade-in">
+      <div class="portrait-frame">
+        <div class="portrait-placeholder">SS</div>
+        <div class="portrait-overlay-corner"></div>
+        <div class="portrait-badge">The Black Mamba</div>
+      </div>
+    </div>
+    <div class="identity-info fade-in">
+      <h2 class="section-title">Le prodige<br>de Rueil</h2>
+      <p class="identity-big-text">
+        Franco-malien de Rueil-Malmaison, Samba Sima s'est construit à la dure au club <em>Fighting Beat</em>. À 22 ans, il incarne la <em>nouvelle génération explosive</em> du MMA français.
+      </p>
+      <div class="info-grid">
+        <div class="info-cell">
+          <div class="info-cell-label">Naissance</div>
+          <div class="info-cell-value">2002</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Nationalité</div>
+          <div class="info-cell-value">Franco-Malien</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Taille</div>
+          <div class="info-cell-value">174 cm</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Catégorie</div>
+          <div class="info-cell-value">Poids Mouche</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Club</div>
+          <div class="info-cell-value">Fighting Beat</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Organisation</div>
+          <div class="info-cell-value">Hexagone MMA</div>
+        </div>
+      </div>
+      <div class="record-visual">
+        <div class="record-dot"></div>
+        <div class="record-dot"></div>
+        <div class="record-dot"></div>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-left:0.75rem;">3 combats · 3 finishes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="palmares">
+  <div class="section-label">
+    <span class="section-label-num">02</span>
+    <span class="section-label-text">Palmarès</span>
+    <div class="section-label-line"></div>
+  </div>
+  <h2 class="section-title fade-in">Titres &amp; Distinctions</h2>
+  <div class="achievements-list">
+    <div class="achievement fade-in">
+      <div class="achievement-icon">🥈</div>
+      <div>
+        <div class="achievement-name">Vice-Champion du Monde IMMAF</div>
+        <div class="achievement-detail">Médaille d'argent mondiale — le Graal du MMA amateur</div>
+      </div>
+      <div class="achievement-year">2024</div>
+    </div>
+    <div class="achievement fade-in">
+      <div class="achievement-icon">🏆</div>
+      <div>
+        <div class="achievement-name">Double Champion de France</div>
+        <div class="achievement-detail">MMA Amateur — titre national consécutif</div>
+      </div>
+      <div class="achievement-year">2023–24</div>
+    </div>
+    <div class="achievement fade-in">
+      <div class="achievement-icon">🥈</div>
+      <div>
+        <div class="achievement-name">Médaillé d'Argent Championnats d'Europe</div>
+        <div class="achievement-detail">Circuit amateur international — finition par KO/TKO</div>
+      </div>
+      <div class="achievement-year">2023</div>
+    </div>
+    <div class="achievement fade-in">
+      <div class="achievement-icon">🏅</div>
+      <div>
+        <div class="achievement-name">Champion AEC — All Élite Combat</div>
+        <div class="achievement-detail">Ceinture de la ligue française d'élite</div>
+      </div>
+      <div class="achievement-year">2023</div>
+    </div>
+    <div class="achievement fade-in">
+      <div class="achievement-icon">⚡</div>
+      <div>
+        <div class="achievement-name">Professionnel Invaincu — 3 combats, 3 KO/TKO</div>
+        <div class="achievement-detail">Hexagone MMA · 100% de finishes en carrière pro</div>
+      </div>
+      <div class="achievement-year">2025–26</div>
+    </div>
+  </div>
+</section>
+
+<div class="quote-section">
+  <div class="quote-bg-text">MMA</div>
+  <p class="quote-text">"J'estime avoir l'une des meilleures carrières amateur de France"</p>
+  <div class="quote-source">— Samba Sima · Interview La Sueur, 2024</div>
+</div>
+
+<section id="combats">
+  <div class="section-label">
+    <span class="section-label-num">03</span>
+    <span class="section-label-text">Combats Pro</span>
+    <div class="section-label-line"></div>
+  </div>
+  <h2 class="section-title fade-in">Palmarès Professionnel</h2>
+  <div class="fights-grid">
+    <div class="fight-card fade-in">
+      <div class="fight-card-top">
+        <div class="fight-event">Hexagone MMA 37</div>
+        <div class="fight-result-badge">VICTOIRE</div>
+      </div>
+      <div class="fight-vs">Samba Sima <span>vs</span> Nikolaj Makarenko</div>
+      <div class="fight-method">KO / TKO</div>
+      <div class="fight-meta">27 mars 2026 · Combat Pro #3</div>
+      <div class="fight-number">3</div>
+    </div>
+    <div class="fight-card fade-in">
+      <div class="fight-card-top">
+        <div class="fight-event">Hexagone MMA 32</div>
+        <div class="fight-result-badge">VICTOIRE</div>
+      </div>
+      <div class="fight-vs">Samba Sima <span>vs</span> Zelimkhan Umarov</div>
+      <div class="fight-method">TKO · Round 2</div>
+      <div class="fight-meta">12 janvier 2026 · Théâtre Antique d'Orange · 4 000 spectateurs</div>
+      <div class="fight-number">2</div>
+    </div>
+    <div class="fight-card fade-in">
+      <div class="fight-card-top">
+        <div class="fight-event">Hexagone MMA 27</div>
+        <div class="fight-result-badge">VICTOIRE</div>
+      </div>
+      <div class="fight-vs">Samba Sima <span>vs</span> Kleider Sandoval</div>
+      <div class="fight-method">KO High-Kick · Round 2</div>
+      <div class="fight-meta">11 août 2025 · Zénith de Lille · Début pro</div>
+      <div class="fight-number">1</div>
+    </div>
+  </div>
+</section>
+
+<section id="style">
+  <div class="section-label">
+    <span class="section-label-num">04</span>
+    <span class="section-label-text">Style de Combat</span>
+    <div class="section-label-line"></div>
+  </div>
+  <h2 class="section-title fade-in">Dans la cage</h2>
+  <div class="style-grid">
+    <div class="style-card fade-in">
+      <span class="style-icon">🦵</span>
+      <div class="style-title">Explosivité</div>
+      <p class="style-desc">Frappe sèche et puissante. Capable de terminer un combat en quelques secondes avec ses high-kicks dévastateurs.</p>
+    </div>
+    <div class="style-card fade-in">
+      <span class="style-icon">🧠</span>
+      <div class="style-title">Polyvalence</div>
+      <p class="style-desc">Techniques variées, solides en pied-poing comme au sol. Adversaire imprévisible et difficile à lire.</p>
+    </div>
+    <div class="style-card fade-in">
+      <span class="style-icon">🔥</span>
+      <div class="style-title">Mental d'Acier</div>
+      <p class="style-desc">Médiateur de métier hors de la cage, combattant dans l'âme dedans. Ambition et sang-froid en toutes circonstances.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Samba Sima</div>
+  <div class="footer-text">
+    The Black Mamba · Fighting Beat · Rueil-Malmaison<br>
+    Hexagone MMA · Poids Mouche · France
+  </div>
+  <div class="footer-record">
+    3 — 0 — 0
+    <small>Record Professionnel</small>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80 * Array.from(entry.target.parentElement.children).indexOf(entry.target));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
